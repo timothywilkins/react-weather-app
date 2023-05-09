@@ -15,7 +15,7 @@ function App() {
   const [minuteData, setMinuteData] = useState(null)
   const [mainData, setMainData] = useState(null)
   const [forecastData, setForecastData] = useState(null)
-  const [mainTextDisplay, setMainTextDisplay] = useState(null)
+  const [displayData, setDisplayData] = useState(null)
 
   function processData(resp) {
 
@@ -59,7 +59,7 @@ function App() {
               displayData[key] = currentData.weather[0].icon
             }
           }
-          setMainTextDisplay(displayData)
+          setDisplayData(displayData)
         })
     }
     function error(err) {
@@ -76,13 +76,13 @@ function App() {
         }
         {mainData &&
           <WeatherMain
-            data={mainTextDisplay} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
+            data={displayData} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
         }
         {graphData &&
-          <HourlyGraph data={graphData} minuteData={minuteData} setDisplayData={setMainTextDisplay} isCelcius={isCelcius}/>
+          <HourlyGraph data={graphData} minuteData={minuteData} setDisplayData={setDisplayData} isCelcius={isCelcius}/>
         }
         {forecastData &&
-          <DailyForecast data={forecastData} setDisplayData={setMainTextDisplay} isCelcius={isCelcius}/>
+          <DailyForecast data={forecastData} setDisplayData={setDisplayData} isCelcius={isCelcius}/>
         }
       </div>
     </div>
