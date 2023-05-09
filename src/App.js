@@ -17,20 +17,6 @@ function App() {
   const [forecastData, setForecastData] = useState(null)
   const [mainTextDisplay, setMainTextDisplay] = useState(null)
 
-
-
-  function convertTempToCel(kelvin) {
-    if (isCelcius) {
-      const celsius = kelvin - 273.15;
-      return Math.round(celsius)
-    }
-    else {
-      const fahrenheit = ((kelvin - 273.15) * 9 / 5 + 32)
-      return Math.round(fahrenheit)
-    }
-  }
-
-
   function processData(resp) {
 
     navigator.geolocation.getCurrentPosition(success, error);
@@ -75,26 +61,10 @@ function App() {
           }
           setMainTextDisplay(displayData)
         })
-
     }
     function error(err) {
       return err.message
     }
-  }
-
-
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayOfWeek = daysOfWeek[date.getDay()];
-    const time = date.toLocaleTimeString();
-    return `${dayOfWeek} ${time}`;
-  }
-  function formatDay(timestamp) {
-    const date = new Date(timestamp * 1000);
-    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const dayOfWeek = daysOfWeek[date.getDay()];
-    return `${dayOfWeek}`;
   }
 
 
@@ -106,13 +76,13 @@ function App() {
         }
         {mainData &&
           <WeatherMain
-            data={mainTextDisplay} time={formatTimestamp} convertTemp={convertTempToCel} setIsCelcius={setIsCelcius} />
+            data={mainTextDisplay} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
         }
         {graphData &&
-          <HourlyGraph data={graphData} minuteData={minuteData} setDisplayData={setMainTextDisplay} time={formatTimestamp} convertTemp={convertTempToCel} />
+          <HourlyGraph data={graphData} minuteData={minuteData} setDisplayData={setMainTextDisplay} isCelcius={isCelcius}/>
         }
         {forecastData &&
-          <DailyForecast data={forecastData} setDisplayData={setMainTextDisplay} time={formatDay} convertTemp={convertTempToCel} />
+          <DailyForecast data={forecastData} setDisplayData={setMainTextDisplay} isCelcius={isCelcius}/>
         }
       </div>
     </div>

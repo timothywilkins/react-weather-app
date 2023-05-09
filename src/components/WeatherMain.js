@@ -1,12 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import {convertTempToCel, formatTimestamp} from './utils.js';
 import styles from './styles/WeatherMain.module.css';
 
 
 function WeatherMain(props) {
 
   const { dt, temp, humidity, wind_speed, description, icon } = props.data;
-  const convertedTemp = props.convertTemp(temp)
+  const convertedTemp = convertTempToCel(temp, props.isCelcius)
   const [isMobile, setIsMobile] = useState(false);
 
 
@@ -32,7 +33,7 @@ function WeatherMain(props) {
       {isMobile ? (
         <div className={styles.wrapper}>
           <div>Weather</div>
-          <div className={styles.date}>{props.time(dt)}</div>
+          <div className={styles.date}>{formatTimestamp(dt)}</div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <div className={styles.temp}>{convertedTemp}°</div>
@@ -70,7 +71,7 @@ function WeatherMain(props) {
             </div>
             <div className={styles.description}>
               <div>Weather</div>
-              <div>{props.time(dt)}</div>
+              <div>{formatTimestamp(dt)}</div>
               <div>{description}</div>
             </div>
           </div>

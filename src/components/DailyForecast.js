@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import {convertTempToCel, formatDay} from './utils.js';
 import styles from './styles/DailyForecast.module.css'
 
 function DailyForecast(props) {
@@ -41,9 +42,9 @@ function DailyForecast(props) {
             {props.data && props.data.length > 0 &&
                 props.data.map((forecast, index) => (
                     <div key={index} onClick={() => handleDivClick(index)} className={selectedDivIndex === index ? styles.selectedCard : ""}>
-                        <div>{props.time(forecast.dt)}</div>
+                        <div>{formatDay(forecast.dt)}</div>
                         <img src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`} />
-                        <div>{props.convertTemp(forecast.temp.min)} / {props.convertTemp(forecast.temp.max)}</div>
+                        <div>{convertTempToCel(forecast.temp.min, props.isCelcius)} / {convertTempToCel(forecast.temp.max,props.isCelcius)}</div>
                     </div>
                 ))
             }

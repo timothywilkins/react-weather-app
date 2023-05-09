@@ -1,39 +1,22 @@
 import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, Legend } from 'recharts';
+import {convertTempToCel, convertToMinutes, convertToHours} from './utils.js';
 import styles from './styles/HourlyGraph.module.css'
 
 function HourlyGraph(props) {
 
   const [activeTab, setActiveTab] = useState('temperature');
-
-  function convertToMinutes(timestamp) {
-    var date = new Date(timestamp * 1000);
-    // Hours part from the timestamp
-    var hours = date.getHours();
-    // Minutes part from the timestamp
-    var minutes = date.getMinutes();
-    return hours+":"+minutes
-    // Seconds part from the timestamp
-  }
-
-  function convertToHours(timestamp) {
-    var date = new Date(timestamp * 1000);
-    // Hours part from the timestamp
-    var hours = date.getHours();
-    // Minutes part from the timestamp
-    var minutes = date.getMinutes();
-    return hours+":00"
-    // Seconds part from the timestamp
-  }
+  const isCelcius = props.isCelcius;
 
   function convertTemps(arr, conversionFunction) {
     return arr.map((obj) => {
       return {
         ...obj,
-        temp: conversionFunction(obj.temp)
+        temp: conversionFunction(obj.temp,isCelcius)
       };
     });
   }
+  
   function minuteConverter(arr, conversionFunction) {
     return arr.map((obj) => {
       return {
@@ -43,14 +26,13 @@ function HourlyGraph(props) {
     });
   }
 
-  const data = convertTemps(props.data, props.convertTemp);
+  const data = convertTemps(props.data, convertTempToCel);
   const newData = minuteConverter(data, convertToHours)
   const minuteData = minuteConverter(props.minuteData,convertToMinutes)
 
   const handleClick = (tabName) => {
     setActiveTab(tabName);
   };
-
 
   return (
 
