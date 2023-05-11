@@ -3,21 +3,20 @@ import React, { useState, useEffect } from 'react';
 import WeatherMain from './components/WeatherMain'
 import DailyForecast from './components/DailyForecast';
 import Input from './components/Input'
-// import WeatherIcon from 'react-open-weather-icon';
-import HourlyGraph from './components/HourlyGraph';
+import DataDisplay from './components/DataDisplay';
 
 
 
 function App() {
 
   const [isCelcius, setIsCelcius] = useState(false)
+  const [data,setData] = useState(null)
   const [graphData, setGraphData] = useState(null)
-  const [minuteData, setMinuteData] = useState(null)
   const [mainData, setMainData] = useState(null)
   const [forecastData, setForecastData] = useState(null)
-  const [displayData, setDisplayData] = useState(null)
+  const [displayTextData, setDisplayTextData] = useState(null)
 
-  function processData(resp) {
+  function fetchData(resp) {
 
     navigator.geolocation.getCurrentPosition(success, error);
 
@@ -29,18 +28,15 @@ function App() {
       fetch('https://api.openweathermap.org/data/3.0/onecall?lat=' + lat + '&lon=' + lon + '&exclude={part}&appid=' + apiKey)
         .then(response => response.json())
         .then((data) => {
-          console.log(data)
           const currentData = data.current;
           const hourlyData = data.hourly;
-          const dailyData = data.daily;
-          const minuteData = data.minutely;
-
+          const forecastData = data.daily;
+          setData(data);
           setMainData(currentData);
           setGraphData(hourlyData);
-          setForecastData(dailyData);
-          setMinuteData(minuteData)
+          setForecastData(forecastData);
 
-          const displayData = {
+          const displayTextData = {
             icon: "",
             temp: "",
             humidity: "",
@@ -49,17 +45,17 @@ function App() {
             description: "",
           };
 
-          for (const key in displayData) {
-            if (currentData.hasOwnProperty(key)) {
-              displayData[key] = currentData[key];
+          for (const key in displayTextData) {
+            if (data.current.hasOwnProperty(key)) {
+              displayTextData[key] = data.current[key];
             } else if (key === "description") {
-              displayData[key] = currentData.weather[0].description;
+              displayTextData[key] = data.current.weather[0].description;
             }
             if (key === "icon") {
-              displayData[key] = currentData.weather[0].icon
+              displayTextData[key] = data.current.weather[0].icon
             }
           }
-          setDisplayData(displayData)
+          setDisplayTextData(displayTextData)
         })
     }
     function error(err) {
@@ -67,22 +63,21 @@ function App() {
     }
   }
 
-
   return (
     <div className="App">
       <div className="inner">
-      {!mainData &&
-        <Input fetchData={processData} />
+      {!data &&
+        <Input fetchData={fetchData} />
         }
-        {mainData &&
+        {data &&
           <WeatherMain
-            data={displayData} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
+            data={displayTextData} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
         }
-        {graphData &&
-          <HourlyGraph data={graphData} minuteData={minuteData} setDisplayData={setDisplayData} isCelcius={isCelcius}/>
+        {data &&
+          <DataDisplay data={graphData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius}/>
         }
-        {forecastData &&
-          <DailyForecast data={forecastData} setDisplayData={setDisplayData} isCelcius={isCelcius}/>
+        {data &&
+          <DailyForecast data={forecastData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius}/>
         }
       </div>
     </div>

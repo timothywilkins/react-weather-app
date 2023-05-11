@@ -1,0 +1,65 @@
+.wrapper {
+    margin-bottom: 16px;
+    padding-top: 24px;
+}
+
+.tabs {
+    line-height: 35px;
+}
+.tabs div {
+    display: inline-block;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  
+    padding: 0 12px;
+    text-align: center;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+.tabs span {
+    border-left: 1px solid #dadce0;
+    margin: 0 11px;
+}
+.active {
+    border-bottom: 3px solid #fbbc04;
+}
+
+.content {
+    height:100px;
+}
+
+.windWrapper {
+    display: flex;
+    justify-content: space-between;
+    height:100%;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 20px;
+    overflow-x: scroll;
+    text-align: center;
+}
+
+.windCard {
+    display: flex;
+    flex: 0 0 15%;
+    flex-direction: column;
+    justify-content: space-around;
+    fill: #fbbc04;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #3c4043;
+    
+}
+
+.arrowWrapper {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.content {
+    display:flex;
+    align-items: center;
+    margin-top:10px;
+}

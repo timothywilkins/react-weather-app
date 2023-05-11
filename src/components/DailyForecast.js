@@ -1,11 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import {convertTempToCel, formatDay} from './utils.js';
+import {convertTemp, formatDay} from './utils.js';
 import styles from './styles/DailyForecast.module.css'
 
 function DailyForecast(props) {
+    const isCelcius = props.isCelcius
     const data = props.data;
-    const setDisplayData = props.setDisplayData;
+    const setDisplayTextData = props.setDisplayTextData;
 
     const [selectedDivIndex, setSelectedDivIndex] = useState(null);
 
@@ -32,8 +33,7 @@ function DailyForecast(props) {
                 displayData[key] = data[index].weather[0].icon
             }
         }
-        setDisplayData(displayData)
-        console.log(displayData)
+        setDisplayTextData(displayData)
     };
 
 
@@ -43,8 +43,8 @@ function DailyForecast(props) {
                 props.data.map((forecast, index) => (
                     <div key={index} onClick={() => handleDivClick(index)} className={selectedDivIndex === index ? styles.selectedCard : ""}>
                         <div>{formatDay(forecast.dt)}</div>
-                        <img src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`} />
-                        <div>{convertTempToCel(forecast.temp.min, props.isCelcius)} / {convertTempToCel(forecast.temp.max,props.isCelcius)}</div>
+                        <img src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}.png`} alt="weather icon" />
+                        <div>{convertTemp(forecast.temp.min, isCelcius)} / {convertTemp(forecast.temp.max, isCelcius)}</div>
                     </div>
                 ))
             }
