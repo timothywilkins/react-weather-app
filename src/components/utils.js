@@ -1,5 +1,17 @@
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+
+export function convertTempInObj(obj, isCelcius) {
+  for (let key in obj) {
+    if (key === 'temp') {
+      obj[key] = convertTemp(obj[key], isCelcius);
+    } else if (typeof obj[key] === 'object') {
+      convertTempInObj(obj[key], isCelcius);
+    }
+  }
+  return obj;
+}
+
 export function convertTemp(kelvin, isCelcius) {
   return isCelcius ? Math.round(kelvin - 273.15) : Math.round((kelvin - 273.15) * 9 / 5 + 32)
 }
