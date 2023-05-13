@@ -8,34 +8,26 @@ import DataDisplay from './components/DataDisplay';
 
 
 function App() {
-
+  const [lon, setLon] = useState(null)
+  const [lat, setLat] = useState(null)
+  const [apiError,setApiError] = useState(null)
   const [isCelcius, setIsCelcius] = useState(false)
-  const [data,setData] = useState(null)
+  const [data, setData] = useState(null)
   const [graphData, setGraphData] = useState(null)
   const [mainData, setMainData] = useState(null)
   const [forecastData, setForecastData] = useState(null)
   const [displayTextData, setDisplayTextData] = useState(null)
 
-  function fetchData(resp) {
-
-    navigator.geolocation.getCurrentPosition(success, error);
-
-    function success(position) {
-      const lat = position.coords.latitude
-      const lon = position.coords.longitude
+  useEffect(() => {
+    if (lat !== null && lon !== null) {
       const apiKey = process.env.REACT_APP_OPEN_WEATHER_MAP_API_KEY
-
-      fetch('https://api.openweathermap.org/data/3.0/onecall?lat=' + lat + '&lon=' + lon + '&exclude={part}&appid=' + apiKey)
+      fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`)
         .then(response => response.json())
-        .then((data) => {
-          const currentData = data.current;
-          const hourlyData = data.hourly;
-          const forecastData = data.daily;
+        .then(data => {
           setData(data);
-          setMainData(currentData);
-          setGraphData(hourlyData);
-          setForecastData(forecastData);
-
+          setMainData(data.current);
+          setGraphData(data.hourly);
+          setForecastData(data.daily);
           const displayTextData = {
             icon: "",
             temp: "",
@@ -44,7 +36,6 @@ function App() {
             dt: "",
             description: "",
           };
-
           for (const key in displayTextData) {
             if (data.current.hasOwnProperty(key)) {
               displayTextData[key] = data.current[key];
@@ -57,27 +48,26 @@ function App() {
           }
           setDisplayTextData(displayTextData)
         })
+        .catch(error => setApiError(error))
     }
-    function error(err) {
-      return err.message
-    }
-  }
+  }, [lat, lon]);
 
   return (
     <div className="App">
       <div className="inner">
-      {!data &&
-        <Input fetchData={fetchData} />
+        {!data &&
+          <Input setLat={setLat} setLon={setLon} />
         }
-        {data &&
+        {data?
           <WeatherMain
             data={displayTextData} isCelcius={isCelcius} setIsCelcius={setIsCelcius} />
+            : <div>{apiError}</div>
         }
         {data &&
-          <DataDisplay data={graphData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius}/>
+          <DataDisplay data={graphData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius} />
         }
         {data &&
-          <DailyForecast data={forecastData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius}/>
+          <DailyForecast data={forecastData} setDisplayTextData={setDisplayTextData} isCelcius={isCelcius} />
         }
       </div>
     </div>
