@@ -50,12 +50,16 @@
     font-weight: 400;
     line-height: 16px;
     color: #3c4043;
-    
 }
 
 .arrowWrapper {
     width: 60%;
     margin: 0 auto;
+}
+@media only screen and (min-width: 768px) {
+    .arrowWrapper {
+        width: 25%;
+    }
 }
 
 .content {
